@@ -3,7 +3,19 @@
 #include <time.h>
 #include <string.h>
 
-int max = 10;
+int max;
+
+void loadMax() {
+    FILE* fp = fopen("max.txt", "r");
+    fscanf(fp, "%d", &max);
+    fclose(fp);
+}
+
+void saveMax() {
+    FILE* fp = fopen("max.txt", "w+");
+    fprintf(fp, "%d", max);
+    fclose(fp);
+}
 
 void play() {
     int number = rand() % max + 1;
@@ -32,18 +44,19 @@ void loadMenu() {
     puts("Press 2 to change the max number");
     puts("Press 3 to quit");
     puts("--------------------------------");
-    
+
     int choice;
     do {
         printf("Enter your choice: ");
     } while (scanf("%d", &choice) == -1 || choice < 1 || choice > 3);
-
+    
     if (choice == 1) {
         play();
     } else if (choice == 2) {
         do {
             printf("Enter a new max (greater than zero): ");
         } while (scanf("%d", &max) == -1 || max <= 0);
+        saveMax();
         puts("Max has been updated");
     } else {
         puts("Thank you for playing! Goodbye.");
@@ -54,6 +67,7 @@ void loadMenu() {
 
 int main() {
     srand(time(NULL));
+    loadMax();
     loadMenu();
     return 0;
 }
